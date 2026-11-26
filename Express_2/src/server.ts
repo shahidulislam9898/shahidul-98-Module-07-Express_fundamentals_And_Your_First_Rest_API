@@ -91,7 +91,6 @@ const initDB = async () => {
 };
 
 initDB();
-
 //* 7-5: Executing Pool and creating tables: End
 
 app.get("/", (req: Request, res: Response) => {
@@ -134,6 +133,56 @@ app.post("/api/v1/users", async (req: Request, res: Response) => {
     });
   }
 });
+
+//* 7-7: Getting All Users and Single user with params : Start
+//To get all users
+app.get("/api/v1/users", async (req: Request, res: Response) => {
+  try {
+    const result = await pool.query(`
+     SELECT * FROM users 
+    `);
+    // console.log(result);
+    res.status(200).json({
+      success: true,
+      message: "Users Retrive Successfully!!",
+      data: result.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      error: error,
+    });
+  }
+});
+
+// To get single user
+app.get("/api/v1/users/:id", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      `
+      SELECT * FROM users 
+      WHERE id = $1
+      `,
+      [id],
+    );
+    console.log(result);
+    res.status(200).json({
+      success: true,
+      message: "Single User Retrive Successfylly!!",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      error: error,
+    });
+  }
+});
+
+//* 7-7: Getting All Users and Single user with params : End
 
 app.listen(port, () => {
   console.log(`The app is running on port: ${port}`);
