@@ -73,7 +73,7 @@ const initDB = async () => {
       CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY, 
         name VARCHAR (255),
-        email VARCHAR (255) NOT NULL, 
+        email VARCHAR (255) UNIQUE NOT NULL,  
         password VARCHAR(255) NOT NULL,
         age INT, 
 
@@ -104,16 +104,35 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.post("/", async (req: Request, res: Response) => {
-  // console.log(req.body);
-  // const body = req.body;
-  const { name, age, password } = req.body;
-  console.log("Password: ", password);
-  res.status(200).json({
-    success: true,
-    message: "This is a test api using post Method",
-    data: { name, age },
-  });
+app.post("/api/v1/users", async (req: Request, res: Response) => {
+  try {
+    // console.log(req.body);
+    // const body = req.body;
+    const { name, email, password, age } = req.body;
+
+    const result = await pool.query(
+      `
+    INSERT INTO users (name, email, password, age) VALUES 
+    ($1, $2, $3, $4) RETURNING *
+  `,
+      [name, email, password, age],
+    );
+    // console.log(result);
+    // console.log("Password: ", password);
+
+    res.status(201).json({
+      success: true,
+      message: "User Created Successfylly!!",
+      // data: { name, age },
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      sussess: false,
+      message: error?.message,
+      error: error,
+    });
+  }
 });
 
 app.listen(port, () => {
