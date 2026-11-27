@@ -42,7 +42,36 @@ const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+// To get single user
+const getSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userService.getSingleUserFromDB(id as string);
+
+    // console.log(result);
+    if (result.rowCount === 0) {
+      res.status(404).json({
+        success: false,
+        message: "User Not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Single User Retrive Successfylly!!",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      error: error,
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllUsers,
+  getSingleUser,
 };
