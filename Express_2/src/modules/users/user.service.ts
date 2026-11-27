@@ -1,6 +1,7 @@
 import { pool } from "../../db";
 import type { IUser } from "./user.interface";
 
+//Create user
 const createUserIntoDB = async (payLoad: IUser) => {
   // console.log(req.body);
   // const body = req.body;
@@ -17,6 +18,16 @@ const createUserIntoDB = async (payLoad: IUser) => {
   return result;
 };
 
+//To get all users from db
+const getAllUsersFromDB = async () => {
+  const result = await pool.query(`
+     SELECT * FROM users 
+    `);
+  return result;
+};
+
+//Export
 export const userService = {
   createUserIntoDB,
+  getAllUsersFromDB,
 };

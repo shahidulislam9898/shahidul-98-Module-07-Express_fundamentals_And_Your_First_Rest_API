@@ -7,6 +7,7 @@ const createUser = async (req: Request, res: Response) => {
     // console.log(result);
     // console.log("Password: ", password);
     const result = await userService.createUserIntoDB(req.body);
+
     res.status(201).json({
       success: true,
       message: "User Created Successfylly!!",
@@ -22,6 +23,26 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
+// To Get all users
+const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const result = await userService.getAllUsersFromDB();
+    // console.log(result);
+    res.status(200).json({
+      success: true,
+      message: "Users Retrive Successfully!!",
+      data: result.rows,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      error: error,
+    });
+  }
+};
+
 export const userController = {
   createUser,
+  getAllUsers,
 };

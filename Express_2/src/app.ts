@@ -72,7 +72,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-// Post API
+// Post API (8-3: Implementing Modular pattern)
 app.use("/api/v1/users", userRoute);
 
 //* 7-7: Getting All Users and Single user with params : Start
