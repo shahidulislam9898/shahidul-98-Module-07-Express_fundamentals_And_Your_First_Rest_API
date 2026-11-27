@@ -50,7 +50,6 @@ import express, {
   type Request,
   type Response,
 } from "express";
-
 import { pool } from "./db";
 import { userRoute } from "./modules/users/user.route";
 
@@ -60,6 +59,8 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/v1/users", userRoute);
 
 //*Default Browser Server
 app.get("/", (req: Request, res: Response) => {
@@ -71,52 +72,5 @@ app.get("/", (req: Request, res: Response) => {
     author: "SIL",
   });
 });
-
-// Post API (8-3: Implementing Modular pattern)
-app.use("/api/v1/users", userRoute);
-
-//* 7-7: Getting All Users and Single user with params : Start
-//To get all users
-
-// To get single user
-
-//* 7-7: Getting All Users and Single user with params : End
-
-//* 7-8: Update User with the PUT method : Start
-
-//* 7-8: Update User with the PUT method : End
-
-//* 7-9: Delete User with Delete Method: Start
-app.delete("/api/v1/users/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const result = await pool.query(
-      `
-      DELETE FROM users WHERE id = $1
-      `,
-      [id],
-    );
-    // console.log(result);
-    if (result.rowCount === 0) {
-      res.status(404).json({
-        success: false,
-        message: "User Not Found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message: "User delete successfully!!",
-      data: result.rows[0],
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error?.message,
-      error: error,
-    });
-  }
-});
-//* 7-9: Delete User with Delete Method: End
 
 export default app;
