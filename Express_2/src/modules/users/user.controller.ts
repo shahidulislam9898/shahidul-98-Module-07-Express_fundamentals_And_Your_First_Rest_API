@@ -70,8 +70,64 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+// Up update single user
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userService.updateUserFromDB(req.body, id as string);
+    // console.log(result);
+    if (result.rowCount === 0) {
+      res.status(404).json({
+        success: false,
+        message: "User Not found",
+      });
+    }
+    res.status(201).json({
+      success: true,
+      message: "User Updated Successfully !!",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      error: error,
+    });
+  }
+};
+
+//delete single user
+const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await userService.deleteUserFromDB(req.body, id as string);
+
+    // console.log(result);
+    if (result.rowCount === 0) {
+      res.status(404).json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User delete successfully!!",
+      data: result.rows[0],
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error?.message,
+      error: error,
+    });
+  }
+};
+
 export const userController = {
   createUser,
   getAllUsers,
   getSingleUser,
+  updateUser,
+  deleteUser,
 };

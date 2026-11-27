@@ -77,99 +77,13 @@ app.use("/api/v1/users", userRoute);
 
 //* 7-7: Getting All Users and Single user with params : Start
 //To get all users
-app.get("/api/v1/users", async (req: Request, res: Response) => {
-  try {
-    const result = await pool.query(`
-     SELECT * FROM users 
-    `);
-    // console.log(result);
-    res.status(200).json({
-      success: true,
-      message: "Users Retrive Successfully!!",
-      data: result.rows,
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error?.message,
-      error: error,
-    });
-  }
-});
 
 // To get single user
-app.get("/api/v1/users/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const result = await pool.query(
-      `
-      SELECT * FROM users 
-      WHERE id = $1
-      `,
-      [id],
-    );
-    // console.log(result);
-    if (result.rowCount === 0) {
-      res.status(404).json({
-        success: false,
-        message: "User Not found",
-      });
-    }
 
-    res.status(200).json({
-      success: true,
-      message: "Single User Retrive Successfylly!!",
-      data: result.rows[0],
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error?.message,
-      error: error,
-    });
-  }
-});
 //* 7-7: Getting All Users and Single user with params : End
 
 //* 7-8: Update User with the PUT method : Start
-app.put("/api/v1/users/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { name, password, age, is_Active } = req.body;
 
-    const result = await pool.query(
-      `
-      UPDATE users 
-      SET 
-      name = COALESCE($1, name),
-      password = COALESCE($2, password),
-      age = COALESCE($3, age),
-      is_Active = COALESCE ($4, is_Active)
-
-      WHERE id = $5  RETURNING *
-    `,
-      [name ?? null, password ?? null, age ?? null, is_Active ?? null, id],
-    );
-    console.log(result);
-    if (result.rowCount === 0) {
-      res.status(404).json({
-        success: false,
-        message: "User Not found",
-      });
-    }
-    res.status(201).json({
-      success: true,
-      message: "User Updated Successfully !!",
-      data: result.rows[0],
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error?.message,
-      error: error,
-    });
-  }
-});
 //* 7-8: Update User with the PUT method : End
 
 //* 7-9: Delete User with Delete Method: Start

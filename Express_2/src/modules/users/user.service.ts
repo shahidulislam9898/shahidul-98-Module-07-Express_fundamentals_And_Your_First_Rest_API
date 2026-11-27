@@ -38,9 +38,41 @@ const getSingleUserFromDB = async (id: string) => {
   return result;
 };
 
+// update user
+const updateUserFromDB = async (payLoad: any, id: string) => {
+  const { name, password, age, is_Active } = payLoad;
+
+  const result = await pool.query(
+    `
+      UPDATE users 
+      SET 
+      name = COALESCE($1, name),
+      password = COALESCE($2, password),
+      age = COALESCE($3, age),
+      is_Active = COALESCE ($4, is_Active)
+
+      WHERE id = $5  RETURNING *
+    `,
+    [name ?? null, password ?? null, age ?? null, is_Active ?? null, id],
+  );
+  return result;
+};
+
+const deleteUserFromDB = async (payLoad: any, id: string) => {
+  const result = await pool.query(
+    `
+      DELETE FROM users WHERE id = $1
+      `,
+    [id],
+  );
+  return result;
+};
+
 //Export
 export const userService = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
+  updateUserFromDB,
+  deleteUserFromDB,
 };
