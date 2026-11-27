@@ -271,8 +271,7 @@
 
 ## 7-8: Update User with the PUT method : Start
 
-      // 7-8: Update User with the PUT method : Start
-
+      //* 7-8: Update User with the PUT method : Start
       app.put("/api/v1/users/:id", async (req: Request, res: Response) => {
       try {
       const { id } = req.params;
@@ -286,25 +285,65 @@
             password = COALESCE($2, password),
             age = COALESCE($3, age),
             is_Active = COALESCE ($4, is_Active)
+
             WHERE id = $5  RETURNING *
       `,
             [name ?? null, password ?? null, age ?? null, is_Active ?? null, id],
       );
-      // console.log(result);
-
+      console.log(result);
+      if (result.rowCount === 0) {
+            res.status(404).json({
+            success: false,
+            message: "User Not found",
+            });
+      }
       res.status(201).json({
             success: true,
-            message: "User Information Updated Successfully !!",
+            message: "User Updated Successfully !!",
             data: result.rows[0],
       });
-
       } catch (error: any) {
       res.status(500).json({
-      success: false,
-      message: error?.message,
-      error: error,
+            success: false,
+            message: error?.message,
+            error: error,
       });
       }
       });
+      //* 7-8: Update User with the PUT method : End
 
-// 7-8: Update User with the PUT method : End
+
+## 7-9: Delete User with Delete Method
+
+      //* 7-9: Delete User with Delete Method: Start
+      app.delete("/api/v1/users/:id", async (req, res) => {
+      try {
+      const { id } = req.params;
+      const result = await pool.query(
+            `
+            DELETE FROM users WHERE id = $1
+            `,
+            [id],
+      );
+      // console.log(result);
+      if (result.rowCount === 0) {
+            res.status(404).json({
+            success: false,
+            message: "User Not Found",
+            });
+      }
+
+      res.status(200).json({
+            success: true,
+            message: "User delete successfully!!",
+            data: result.rows[0],
+      });
+      } catch (error: any) {
+      res.status(500).json({
+            success: false,
+            message: error?.message,
+            error: error,
+      });
+      }
+      });
+      //* 7-9: Delete User with Delete Method: End
