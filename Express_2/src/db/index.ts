@@ -24,10 +24,9 @@ export const initDB = async () => {
       )
       
     `);
-    console.log("Database Connected: Database connected successfully!!");
+    console.log("Database connected successfully!!");
   } catch (error) {
     console.log(error);
   }
 };
-
 //* 7-5: Executing Pool and creating tables: End

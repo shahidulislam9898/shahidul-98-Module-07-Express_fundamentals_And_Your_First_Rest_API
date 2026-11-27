@@ -52,6 +52,7 @@ import express, {
 } from "express";
 
 import { pool } from "./db";
+import { userRoute } from "./modules/users/user.route";
 
 const app: Application = express();
 // const port = 5000;
@@ -71,36 +72,8 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.post("/api/v1/users", async (req: Request, res: Response) => {
-  try {
-    // console.log(req.body);
-    // const body = req.body;
-    const { name, email, password, age } = req.body;
-
-    const result = await pool.query(
-      `
-    INSERT INTO users (name, email, password, age) VALUES 
-    ($1, $2, $3, $4) RETURNING *
-  `,
-      [name, email, password, age],
-    );
-    // console.log(result);
-    // console.log("Password: ", password);
-
-    res.status(201).json({
-      success: true,
-      message: "User Created Successfylly!!",
-      // data: { name, age },
-      data: result.rows[0],
-    });
-  } catch (error: any) {
-    res.status(500).json({
-      sussess: false,
-      message: error?.message,
-      error: error,
-    });
-  }
-});
+// Post API
+app.use("/api/v1/users", userRoute);
 
 //* 7-7: Getting All Users and Single user with params : Start
 //To get all users
