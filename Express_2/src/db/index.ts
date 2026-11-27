@@ -25,7 +25,7 @@ export const initDB = async () => {
     `);
 
     await pool.query(`
-      CREATE TABLE IF NOT EXISTS prorile(
+      CREATE TABLE IF NOT EXISTS profile(
       id SERIAL PRIMARY KEY, 
       user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE, 
 
