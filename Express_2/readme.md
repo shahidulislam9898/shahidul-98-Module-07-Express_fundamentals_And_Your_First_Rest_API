@@ -312,7 +312,6 @@
       });
       //* 7-8: Update User with the PUT method : End
 
-
 ## 7-9: Delete User with Delete Method
 
       //* 7-9: Delete User with Delete Method: Start
@@ -347,3 +346,37 @@
       }
       });
       //* 7-9: Delete User with Delete Method: End
+
+## 7-10: Set up Environment-based Configurations
+
+1. Create .env file under root directory
+   PORT = 5000
+   DATABASE_URL = postgresql://neondb_owner:npg_cJbj6k0qOhGA@ep-twilight-silence-az0qr3em-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=false&channel_binding=require
+
+2. Create Config folder under src folder
+3. Create index.ts file under config file
+   //Install npm i dotenv
+
+   import dotenv from "dotenv";
+   import path from "path";
+
+   dotenv.config({
+   path: path.join(process.cwd(), ".env"),
+   });
+
+   const config = {
+   port: process.env.PORT,
+   connection_string: process.env.DATABASE_URL as string,
+   };
+
+   export default config;
+
+4. Connect connection with server.ts
+   const pool = new Pool({
+   connectionString: config.connection_string,
+   });
+
+   //? Lister the app on console
+   app.listen(config.port, () => {
+   console.log(`The app is running on port: ${config.port}`);
+   });

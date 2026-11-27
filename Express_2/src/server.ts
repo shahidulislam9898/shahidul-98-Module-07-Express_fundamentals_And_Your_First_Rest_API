@@ -52,17 +52,17 @@ import express, {
 } from "express";
 
 import { Pool } from "pg";
+import config from "./config";
 
 const app: Application = express();
-const port = 5000;
+// const port = 5000;
 
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
 
 const pool = new Pool({
-  connectionString:
-    "postgresql://neondb_owner:npg_cJbj6k0qOhGA@ep-twilight-silence-az0qr3em-pooler.c-3.ap-southeast-1.aws.neon.tech/neondb?sslmode=false&channel_binding=require",
+  connectionString: config.connection_string,
 });
 // console.log("Pool From Neon DB", pool);
 
@@ -266,6 +266,6 @@ app.delete("/api/v1/users/:id", async (req, res) => {
 //* 7-9: Delete User with Delete Method: End
 
 //? Lister the app on console
-app.listen(port, () => {
-  console.log(`The app is running on port: ${port}`);
+app.listen(config.port, () => {
+  console.log(`The app is running on port: ${config.port}`);
 });
